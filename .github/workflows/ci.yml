@@ -1,34 +1,28 @@
 name: CI
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
       - master
-  pull_request:
-
-permissions:
-  actions: read
-  contents: read
-
 jobs:
-  main:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout ✅
+        uses: actions/checkout@v4
+
+      - name: Install packages 📦
+        run: npm ci 
+
+      - name: Bundle 🔗
+        run: npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          fetch-depth: 0
-
-      # Connect your workspace on nx.app and uncomment this to enable task distribution.
-      # The "--stop-agents-after" is optional, but allows idle agents to shut down once the "e2e-ci" targets have been requested
-      # - run: npx nx-cloud start-ci-run --distribute-on="5 linux-medium-js" --stop-agents-after="e2e-ci"
-
-      # Cache node_modules
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
-      - uses: nrwl/nx-set-shas@v4
-
-      - run: npx nx-cloud record -- nx format:check
-      - run: npx nx affected -t lint test build e2e-ci
+          branch: gh-pages
+          folder: dist/apps/rick-morty-quiz
