@@ -1,0 +1,9 @@
+{
+  "name": "rick-morty-quiz-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/rick-morty-quiz-e2e/src",
+  "targets": {},
+  "implicitDependencies": ["rick-morty-quiz"],
+  "tags": []
+}
