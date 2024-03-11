@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "stylelint-config-recommended-scss",
+    "stylelint-config-idiomatic-order"
+  ],
+  "files": ["**/*.scss"],
+  "plugins": ["stylelint-order"],
+  "rules":{
+    "scss/no-global-function-names": null
+  }
+}
