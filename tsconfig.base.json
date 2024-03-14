@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@rick-morty-quiz/ui": ["libs/shared/ui/src/index.ts"]
+      "@rick-morty-quiz/game": ["libs/game/src/index.ts"],
+      "@rick-morty-quiz/ui": ["libs/shared/ui/src/index.ts"],
+      "@rick-morty-quiz/utils": ["libs/shared/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

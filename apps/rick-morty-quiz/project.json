@@ -4,5 +4,5 @@
   "sourceRoot": "apps/rick-morty-quiz/src",
   "projectType": "application",
   "targets": {},
-  "tags": []
+  "tags": ["app"]
 }
