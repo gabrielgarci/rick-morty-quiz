@@ -1,0 +1,64 @@
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+
+  &__label {
+    margin-left: 1rem;
+    font-size: 3rem;
+  }
+
+  &__controller {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+  }
+}
+
+.number {
+  margin: 0 3rem;
+}
+
+.arrow {
+  height: 4rem;
+  cursor: pointer;
+  filter: brightness(80%);
+
+  &:hover {
+    filter: brightness(100%);
+  }
+
+  &--decrease {
+    animation: 0.5s infinite alternate arrow-backwards;
+  }
+
+  &--increase {
+    animation: 0.5s infinite alternate arrow-forwards;
+  }
+
+  &--disabled,
+  &--disabled:hover {
+    filter: opacity(0.4);
+  }
+}
+
+@keyframes arrow-backwards {
+  from {
+    transform: translateX(0) rotate(90deg);
+  }
+  to {
+    transform: translateX(-10px) rotate(90deg);
+  }
+}
+
+@keyframes arrow-forwards {
+  from {
+    transform: translateX(0) rotate(-90deg);
+  }
+  to {
+    transform: translateX(10px) rotate(-90deg);
+  }
+}
