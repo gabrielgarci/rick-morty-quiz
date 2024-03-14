@@ -6,7 +6,8 @@ export enum ButtonType {
 
 export interface ButtonProps {
   children: string;
-  click?: () => void;
+  onClick?: () => void;
   type?: ButtonType;
   shadow?: boolean;
+  collapse?: boolean;
 }

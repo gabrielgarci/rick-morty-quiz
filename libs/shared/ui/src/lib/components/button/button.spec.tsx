@@ -44,9 +44,22 @@ describe('Button', () => {
     expect(buttonElement?.classList.toString()).toBe(expectedCssClasses);
   });
 
+  it('should collapse', () => {
+    render(<Button collapse={true}>Some</Button>);
+    const buttonElement = screen.queryByRole('button');
+
+    const expectedCssClasses = [
+      styles.button,
+      styles['button--primary'],
+      styles['button--collapse'],
+    ].join(' ');
+
+    expect(buttonElement?.classList.toString()).toBe(expectedCssClasses);
+  });
+
   it('should emit on click function', () => {
     const mockFunc = vi.fn();
-    render(<Button click={mockFunc}>Some</Button>);
+    render(<Button onClick={mockFunc}>Some</Button>);
     const buttonElement = screen.queryByRole('button');
 
     if (!buttonElement) {

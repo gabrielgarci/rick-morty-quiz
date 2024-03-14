@@ -9,8 +9,10 @@ export const Button = (props: ButtonProps) => {
 
   if (props.shadow) btnClasses.push(styles['button--shadow']);
 
+  if (props.collapse) btnClasses.push(styles['button--collapse']);
+
   return (
-    <button className={btnClasses.join(' ')} onClick={props.click}>
+    <button className={btnClasses.join(' ')} onClick={props.onClick}>
       {props.children}
     </button>
   );
