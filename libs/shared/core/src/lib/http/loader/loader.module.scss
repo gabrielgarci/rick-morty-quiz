@@ -1,0 +1,57 @@
+.spinner {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &__frame {
+    width: 200px;
+    max-height: 80vh;
+
+    .pic {
+      width: 100%;
+      animation: 0.7s infinite alternate morty-face;
+      transform: scale(0.9);
+    }
+  }
+
+  &__text {
+    width: 200px;
+    align-self: flex-start;
+    padding-left: 6rem;
+    margin: 5rem auto 0 auto;
+    color: white;
+    font-size: 2.5rem;
+
+    &:after {
+      animation: 3s infinite loading;
+      content: 'LOADING';
+    }
+  }
+}
+
+@keyframes morty-face {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes loading {
+  0% {
+    content: 'LOADING';
+  }
+  25% {
+    content: 'LOADING.';
+  }
+  50% {
+    content: 'LOADING..';
+  }
+  75% {
+    content: 'LOADING...';
+  }
+}

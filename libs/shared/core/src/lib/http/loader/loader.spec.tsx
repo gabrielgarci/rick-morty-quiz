@@ -1,14 +1,13 @@
 import { render } from '@testing-library/react';
 
-import { MemoryRouter } from 'react-router-dom';
-import App from './home';
+import { Loader } from './loader';
 
-describe('App', () => {
+describe('Loader', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
+      <Loader>
+        <p>some</p>
+      </Loader>
     );
     expect(baseElement).toBeTruthy();
   });

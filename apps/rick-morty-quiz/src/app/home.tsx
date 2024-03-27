@@ -1,9 +1,9 @@
 import style from './home.module.scss';
 
-import title from '../assets/images/title.png';
-import logo from '../assets/images/logo.png';
-import { Link } from 'react-router-dom';
 import { Button, ButtonType } from '@rick-morty-quiz/ui';
+import { Link } from 'react-router-dom';
+import logo from '../assets/images/logo.png';
+import title from '../assets/images/title.png';
 
 const Home = () => (
   <div className={style.home}>

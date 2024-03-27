@@ -14,15 +14,19 @@
             "depConstraints": [
               {
                 "sourceTag": "app",
-                "onlyDependOnLibsWithTags": ["feature", "ui", "util"]
+                "onlyDependOnLibsWithTags": ["feature", "ui", "core"]
               },
               {
                 "sourceTag": "feature",
-                "onlyDependOnLibsWithTags": ["ui", "util"]
+                "onlyDependOnLibsWithTags": ["ui", "util", "core"]
               },
               {
                 "sourceTag": "ui",
                 "onlyDependOnLibsWithTags": ["util"]
+              },
+              {
+                "sourceTag": "core",
+                "onlyDependOnLibsWithTags": ["utils", "ui"]
               }
             ]
           }

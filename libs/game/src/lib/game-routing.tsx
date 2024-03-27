@@ -1,11 +1,10 @@
-import Create from './pages/create/create';
 import { RouteObject } from 'react-router-dom';
+import Create from './pages/create/create';
 
 export const BASE_GAME_URL = 'game';
 
 export enum GameUrl {
   Create = 'create',
-  Play = 'play',
 }
 
 export const GAME_ROUTES: RouteObject[] = [

@@ -1,7 +1,5 @@
+import { http } from '@rick-morty-quiz/core';
 import { Button, ButtonType, Counter, Input } from '@rick-morty-quiz/ui';
-import styles from './create.module.scss';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import {
   FormErrors,
   FormFieldChangeEvent,
@@ -11,11 +9,24 @@ import {
   getFieldError,
   getFormErrors,
 } from '@rick-morty-quiz/utils';
-import { CreateFormFields, CreateFormValue } from './create.interface';
-import { GameUrl, getGameUrl } from '../../game-routing';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import {
+  Character,
+  CharacterResponse,
+  GameField,
+  NewGame,
+  NewGameForm,
+} from '../../models';
+import { initializeGame } from '../../store/game.slice';
+import styles from './create.module.scss';
 
-const FORM_VALIDATORS: FormValidation<CreateFormValue> = {
-  [CreateFormFields.Name]: [
+const MIN_ROUNDS = 10;
+const MAX_ROUNDS = 25;
+
+const FORM_VALIDATORS: FormValidation<NewGameForm> = {
+  [GameField.Name]: [
     {
       func: (value: string) => value.trim().length > 2,
       message: '*Name must have at least 3 characters',
@@ -23,40 +34,78 @@ const FORM_VALIDATORS: FormValidation<CreateFormValue> = {
   ],
 };
 
+const getTotalCharacters = async (): Promise<number> => {
+  const url = 'https://rickandmortyapi.com/api/character';
+  const response: CharacterResponse = await http.get(url);
+  const numberOfCharacters = response.info.count;
+  return numberOfCharacters;
+};
+
+const getRandomNumbers = (
+  length: number,
+  max: number,
+  initialArray: number[] = []
+): number[] => {
+  const randomNumbers = Array.from({ length }, () =>
+    Math.floor(Math.random() * max)
+  );
+  const randomNumbersWithoutDuplicated = [
+    ...new Set([...initialArray, ...randomNumbers]),
+  ];
+
+  const desiredLength = initialArray.length + length;
+  if (randomNumbersWithoutDuplicated.length === desiredLength)
+    return randomNumbersWithoutDuplicated;
+
+  const remainNumbers = length - randomNumbersWithoutDuplicated.length;
+
+  return getRandomNumbers(remainNumbers, max, randomNumbersWithoutDuplicated);
+};
+
+const getRandomCharacters = async (rounds: number): Promise<Character[]> => {
+  const totalCharacters = await getTotalCharacters();
+  const randomNumbers = getRandomNumbers(rounds, totalCharacters);
+  const joinedRandomNumbers = randomNumbers.join(',');
+  const url = `https://rickandmortyapi.com/api/character/${joinedRandomNumbers}`;
+  const response: Character[] = await http.get(url);
+  return response;
+};
+
 const Create = () => {
-  const navigate = useNavigate();
-  const [formValue, setFormValue] = useState<CreateFormValue>({
-    [CreateFormFields.Name]: '',
-    [CreateFormFields.Rounds]: 10,
+  const dispatch = useDispatch();
+
+  const [formValue, setFormValue] = useState<NewGameForm>({
+    [GameField.Name]: '',
+    [GameField.Rounds]: 10,
   });
 
-  const [formErrors, setFormErrors] = useState<FormErrors<CreateFormValue>>({});
+  const [formErrors, setFormErrors] = useState<FormErrors<NewGameForm>>({});
 
   const handleChange = (event: FormFieldChangeEvent<FormFieldValue>): void => {
-    const name = event.target.name as CreateFormFields;
+    const fieldName = event.target.name as keyof NewGameForm;
     const { value } = event.target;
-    const updatedForm: CreateFormValue = {
+    const updatedForm: NewGameForm = {
       ...formValue,
-      [name]: value,
+      [fieldName]: value,
     };
     setFormValue(updatedForm);
 
-    const validators = FORM_VALIDATORS[name] as
+    const validators = FORM_VALIDATORS[fieldName] as
       | Validator<FormFieldValue>[]
       | undefined;
 
     if (validators) {
       const fieldError = getFieldError(value, validators);
-      const updatedErrors: FormErrors<CreateFormValue> = {
+      const updatedErrors: FormErrors<NewGameForm> = {
         ...formErrors,
-        [name]: fieldError,
+        [fieldName]: fieldError,
       };
       setFormErrors(updatedErrors);
     }
   };
 
-  const submitForm = (): void => {
-    const errors = getFormErrors<CreateFormValue>(formValue, FORM_VALIDATORS);
+  const submitForm = async (): Promise<void> => {
+    const errors = getFormErrors<NewGameForm>(formValue, FORM_VALIDATORS);
 
     setFormErrors(errors);
 
@@ -66,27 +115,33 @@ const Create = () => {
       return;
     }
 
-    const playPath = getGameUrl(GameUrl.Play);
-    navigate(playPath);
+    const characters = await getRandomCharacters(formValue[GameField.Rounds]);
+
+    const newGameData: NewGame = {
+      ...formValue,
+      [GameField.Characters]: characters,
+    };
+
+    dispatch(initializeGame(newGameData));
   };
 
   return (
     <div className={styles['create-game']}>
       <div className={styles.form}>
         <Input
-          name={CreateFormFields.Name}
+          name={GameField.Name}
           label="NAME"
-          value={formValue[CreateFormFields.Name]}
+          value={formValue[GameField.Name]}
           onChange={handleChange}
-          errorMessage={formErrors[CreateFormFields.Name]}
+          errorMessage={formErrors[GameField.Name]}
         />
         <Counter
-          name={CreateFormFields.Rounds}
+          name={GameField.Rounds}
           label="ROUNDS"
-          value={formValue[CreateFormFields.Rounds]}
+          value={formValue[GameField.Rounds]}
           step={5}
-          minValue={10}
-          maxValue={25}
+          minValue={MIN_ROUNDS}
+          maxValue={MAX_ROUNDS}
           onChange={handleChange}
         />
       </div>
